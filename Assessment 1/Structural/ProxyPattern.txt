@@ -1,0 +1,53 @@
+package Structural;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Subject Interface
+interface Internet {
+    void connectTo(String serverHost) throws Exception;
+}
+
+// Real Subject
+class RealInternet implements Internet {
+    @Override
+    public void connectTo(String serverHost) {
+        System.out.println("Connecting to " + serverHost);
+    }
+}
+
+// Proxy Class
+class ProxyInternet implements Internet {
+    private Internet internet = new RealInternet();
+    private static List<String> bannedSites;
+
+    // Static block to initialize the banned sites list
+    static {
+        bannedSites = new ArrayList<>();
+        bannedSites.add("abc.com");
+        bannedSites.add("xyz.com");
+    }
+
+    @Override
+    public void connectTo(String serverHost) throws Exception {
+        // Check if the server is in the banned list
+        if (bannedSites.contains(serverHost.toLowerCase())) {
+            throw new Exception("Access Denied to " + serverHost);
+        }
+        // If not banned, allow connection
+        internet.connectTo(serverHost);
+    }
+}
+
+// Client
+public class ProxyPatternDemo {
+    public static void main(String[] args) {
+        Internet internet = new ProxyInternet();
+        try {
+            internet.connectTo("geeksforgeeks.org");  // Successful connection
+            internet.connectTo("abc.com");            // Access Denied
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}

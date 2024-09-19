@@ -1,0 +1,76 @@
+// Abstract Handler class
+abstract class SupportHandler {
+    protected SupportHandler nextHandler;
+
+    public void setNextHandler(SupportHandler nextHandler) {
+        this.nextHandler = nextHandler;
+    }
+
+    public abstract void handleRequest(String issue);
+}
+
+// Concrete Handler for Basic Support
+class BasicSupportHandler extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Basic")) {
+            System.out.println("Basic Support: Issue resolved at Basic level.");
+        } else {
+            if (nextHandler != null) {
+                nextHandler.handleRequest(issue);
+            }
+        }
+    }
+}
+
+// Concrete Handler for Technical Support
+class TechnicalSupportHandler extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Technical")) {
+            System.out.println("Technical Support: Issue resolved at Technical level.");
+        } else {
+            if (nextHandler != null) {
+                nextHandler.handleRequest(issue);
+            }
+        }
+    }
+}
+
+// Concrete Handler for Managerial Support
+class ManagerSupportHandler extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Managerial")) {
+            System.out.println("Manager Support: Issue escalated to Manager and resolved.");
+        } else {
+            if (nextHandler != null) {
+                nextHandler.handleRequest(issue);
+            }
+        }
+    }
+}
+
+// Client
+public class ChainOfResponsibilityDemo {
+    public static void main(String[] args) {
+        // Create handlers
+        SupportHandler basicHandler = new BasicSupportHandler();
+        SupportHandler technicalHandler = new TechnicalSupportHandler();
+        SupportHandler managerHandler = new ManagerSupportHandler();
+
+        // Set chain of responsibility
+        basicHandler.setNextHandler(technicalHandler);
+        technicalHandler.setNextHandler(managerHandler);
+
+        // Simulate different issues
+        System.out.println("Request: Basic Issue");
+        basicHandler.handleRequest("Basic");  // Basic Support: Issue resolved at Basic level.
+
+        System.out.println("\nRequest: Technical Issue");
+        basicHandler.handleRequest("Technical");  // Technical Support: Issue resolved at Technical level.
+
+        System.out.println("\nRequest: Managerial Issue");
+        basicHandler.handleRequest("Managerial");  // Manager Support: Issue escalated to Manager and resolved.
+    }
+}

@@ -1,0 +1,50 @@
+package Creational;
+
+interface Notification {
+    void notifyUser();
+}
+
+// Concrete classes for different notifications
+class EmailNotification implements Notification {
+    @Override
+    public void notifyUser() {
+        System.out.println("Sending Email Notification");
+    }
+}
+
+class SMSNotification implements Notification {
+    @Override
+    public void notifyUser() {
+        System.out.println("Sending SMS Notification");
+    }
+}
+
+class PushNotification implements Notification {
+    @Override
+    public void notifyUser() {
+        System.out.println("Sending Push Notification");
+    }
+}
+
+// Factory Class
+class NotificationFactory {
+    public static Notification createNotification(String type) {
+        switch (type) {
+            case "Email": return new EmailNotification();
+            case "SMS": return new SMSNotification();
+            case "Push": return new PushNotification();
+            default: throw new IllegalArgumentException("Unknown notification type");
+        }
+    }
+}
+
+// Client
+public class FactoryPatternDemo {
+    public static void main(String[] args) {
+        Notification notification = NotificationFactory.createNotification("Email");
+        notification.notifyUser();  // Sending Email Notification
+
+        Notification notification2 = NotificationFactory.createNotification("SMS");
+        notification2.notifyUser();  // Sending SMS Notification
+    }
+}

@@ -1,0 +1,112 @@
+// SatelliteCommandSystem.java
+
+import java.util.Scanner;
+
+// Class to represent the Satellite's state and behaviors
+class Satellite {
+    // Satellite attributes (initial states)
+    private String orientation = "North";
+    private String solarPanelsStatus = "Inactive";
+    private int dataCollected = 0;
+
+    // Method to rotate the satellite in a given direction (North, South, East, West)
+    public void rotate(String direction) {
+        if (direction.equalsIgnoreCase("North") || 
+            direction.equalsIgnoreCase("South") || 
+            direction.equalsIgnoreCase("East") || 
+            direction.equalsIgnoreCase("West")) {
+            orientation = direction;
+            System.out.println("Rotated to: " + orientation);
+        } else {
+            System.out.println("Invalid direction. Please choose from North, South, East, or West.");
+        }
+    }
+
+    // Method to activate solar panels
+    public void activatePanels() {
+        solarPanelsStatus = "Active";
+        System.out.println("Solar panels are now: " + solarPanelsStatus);
+    }
+
+    // Method to deactivate solar panels
+    public void deactivatePanels() {
+        solarPanelsStatus = "Inactive";
+        System.out.println("Solar panels are now: " + solarPanelsStatus);
+    }
+
+    // Method to collect data if solar panels are active
+    public void collectData() {
+        if (solarPanelsStatus.equals("Active")) {
+            dataCollected += 10;
+            System.out.println("Data collected: " + dataCollected + " units");
+        } else {
+            System.out.println("Cannot collect data as solar panels are inactive.");
+        }
+    }
+
+    // Method to display the current state of the satellite
+    public void displayState() {
+        System.out.println("\nCurrent Satellite State:");
+        System.out.println("Orientation: " + orientation);
+        System.out.println("Solar Panels: " + solarPanelsStatus);
+        System.out.println("Data Collected: " + dataCollected + " units");
+    }
+}
+
+// Main class to handle command inputs and drive the satellite control system
+public class SatelliteCommandSystem {
+    public static void main(String[] args) {
+        // Create a new satellite instance
+        Satellite satellite = new Satellite();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Satellite Command System Initialized.");
+        System.out.println("Available Commands: rotate(North|South|East|West), activatePanels, deactivatePanels, collectData, exit");
+
+        // Loop to accept commands from the user
+        while (true) {
+            System.out.print("\nEnter a command: ");
+            String input = scanner.nextLine();
+
+            // Split the command to handle parameters like rotation direction
+            String[] commandParts = input.split("\\(");
+            String command = commandParts[0].trim();
+
+            // Handle rotate command with direction parameter
+            if (command.equalsIgnoreCase("rotate")) {
+                if (commandParts.length > 1) {
+                    String direction = commandParts[1].replace(")", "").trim();
+                    satellite.rotate(direction);
+                } else {
+                    System.out.println("Please provide a direction (North, South, East, West) for rotation.");
+                }
+            }
+            // Handle solar panel activation
+            else if (command.equalsIgnoreCase("activatePanels")) {
+                satellite.activatePanels();
+            }
+            // Handle solar panel deactivation
+            else if (command.equalsIgnoreCase("deactivatePanels")) {
+                satellite.deactivatePanels();
+            }
+            // Handle data collection
+            else if (command.equalsIgnoreCase("collectData")) {
+                satellite.collectData();
+            }
+            // Exit the command loop
+            else if (command.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting Satellite Command System...");
+                break;
+            }
+            // Handle invalid commands
+            else {
+                System.out.println("Invalid command. Please try again.");
+            }
+
+            // Display the current state of the satellite after each command
+            satellite.displayState();
+        }
+
+        scanner.close();
+    }
+}
